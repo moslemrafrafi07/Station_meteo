@@ -12,36 +12,61 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends Activity {
-    DatabaseReference mydb;
-    TextView temp, hum;
+    DatabaseReference dhtRef, bmpRef; // ref bmp and dht
+    TextView tempDHT, humDHT, tempBMP, pressureBMP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        temp = (TextView) findViewById(R.id.temp);
-        hum = (TextView) findViewById(R.id.hum);
 
-        mydb = FirebaseDatabase.getInstance().getReference().child("dht11");
+        // ref bmp and dht
+        dhtRef = FirebaseDatabase.getInstance().getReference().child("dht11");
+        bmpRef = FirebaseDatabase.getInstance().getReference().child("bmp280");
 
-        mydb.addValueEventListener(new ValueEventListener() {
+        // Init txt vw temp and hum dht
+        tempDHT = findViewById(R.id.tempDHT);
+        humDHT = findViewById(R.id.humDHT);
+
+        // Init txt vw prssr and temp bmp
+        tempBMP = findViewById(R.id.tempBMP);
+        pressureBMP = findViewById(R.id.pressureBMP);
+
+        // dht listener
+        dhtRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
                 DataSnapshot temperatureSnapshot = dataSnapshot.child("temperature");
                 DataSnapshot humiditySnapshot = dataSnapshot.child("humidity");
 
                 String tempdata = temperatureSnapshot.getValue().toString();
                 String humdata = humiditySnapshot.getValue().toString();
-                temp.setText(tempdata);
-                hum.setText(humdata);
+                tempDHT.setText(tempdata);
+                humDHT.setText(humdata);
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.e("Firebase", "Failed to read value.", error.toException());
+                Log.e("Firebase", "Failed to read value for DHT11.", error.toException());
+            }
+        });
+
+        // listener BMP280
+        bmpRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                DataSnapshot temperatureSnapshot = dataSnapshot.child("temperature");
+                DataSnapshot pressureSnapshot = dataSnapshot.child("pressure");
+
+                String tempdata = temperatureSnapshot.getValue().toString();
+                String pressuredata = pressureSnapshot.getValue().toString();
+                tempBMP.setText(tempdata);
+                pressureBMP.setText(pressuredata);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Log.e("Firebase", "Failed to read value for BMP280.", error.toException());
             }
         });
     }
