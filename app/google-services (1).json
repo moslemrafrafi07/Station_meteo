@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "539240452049",
+    "firebase_url": "https://esp32-fb-cea18-default-rtdb.firebaseio.com",
+    "project_id": "esp32-fb-cea18",
+    "storage_bucket": "esp32-fb-cea18.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:539240452049:android:7aa49e97e9014ad82d1af0",
+        "android_client_info": {
+          "package_name": "com.example.stationmeteo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBw3FEi1PVrhOJqE1QvOUAeignFYpSTva0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
