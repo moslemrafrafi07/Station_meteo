@@ -12,8 +12,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends Activity {
-    DatabaseReference dhtRef, bmpRef; // ref bmp and dht
-    TextView tempDHT, humDHT, tempBMP, pressureBMP;
+    DatabaseReference dht11Ref, dht22Ref, bmpRef; // ref bmp and dht
+    TextView tempDHT11, humDHT11, tempDHT22, humDHT22, tempBMP, pressureBMP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,19 +21,24 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         // ref bmp and dht
-        dhtRef = FirebaseDatabase.getInstance().getReference().child("dht11");
+        dht11Ref = FirebaseDatabase.getInstance().getReference().child("dht11");
+        dht22Ref = FirebaseDatabase.getInstance().getReference().child("dht22");
         bmpRef = FirebaseDatabase.getInstance().getReference().child("bmp280");
 
         // Init txt vw temp and hum dht
-        tempDHT = findViewById(R.id.tempDHT);
-        humDHT = findViewById(R.id.humDHT);
+        tempDHT11 = findViewById(R.id.tempDHT11);
+        humDHT11 = findViewById(R.id.humDHT11);
+
+        // Init txt vw temp and hum dht22
+        tempDHT22 = findViewById(R.id.tempDHT22);
+        humDHT22 = findViewById(R.id.humDHT22);
 
         // Init txt vw prssr and temp bmp
         tempBMP = findViewById(R.id.tempBMP);
         pressureBMP = findViewById(R.id.pressureBMP);
 
-        // dht listener
-        dhtRef.addValueEventListener(new ValueEventListener() {
+        // dht11 listener
+        dht11Ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 DataSnapshot temperatureSnapshot = dataSnapshot.child("temperature");
@@ -41,8 +46,8 @@ public class MainActivity extends Activity {
 
                 String tempdata = temperatureSnapshot.getValue().toString();
                 String humdata = humiditySnapshot.getValue().toString();
-                tempDHT.setText(tempdata);
-                humDHT.setText(humdata);
+                tempDHT11.setText(tempdata);
+                humDHT11.setText(humdata);
             }
 
             @Override
@@ -51,7 +56,26 @@ public class MainActivity extends Activity {
             }
         });
 
-        // listener BMP280
+        // dht22 listener
+        dht22Ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                DataSnapshot temperatureSnapshot = dataSnapshot.child("temperature");
+                DataSnapshot humiditySnapshot = dataSnapshot.child("humidity");
+
+                String tempdata = temperatureSnapshot.getValue().toString();
+                String humdata = humiditySnapshot.getValue().toString();
+                tempDHT22.setText(tempdata);
+                humDHT22.setText(humdata);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Log.e("Firebase", "Failed to read value for DHT22.", error.toException());
+            }
+        });
+
+        // bmp listener
         bmpRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
